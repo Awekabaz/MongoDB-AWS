@@ -2,6 +2,7 @@
 ![scheme](scheme/mongo-project.png)
 
 Data transfer from MongoDB to AWS S3 bucket for further data visualization in AWS QuickSight. 
+                    `The names of collections and attributes are replaced with dummies`
 
 - Data is extracted by Lambda function (with pymongo library) configured in a VPC with a private subnet. 
 
