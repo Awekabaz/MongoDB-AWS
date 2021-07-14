@@ -76,7 +76,7 @@ def lambda_handler(event, context):
                 Body = csv_buffer.getvalue()
                 )  
                 
-    infoString = 'd1: {}; d2: {}; d3: {}; d4: {};'.format(df1.shape,df2.shape,df3.shape,df4.shape)
+    infoString = 'DATE: {}; d1: {}; d2: {}; d3: {}; d4: {};'.format(OPERATION_DATE, df1.shape,df2.shape,df3.shape,df4.shape)
     uploadByteStreams = bytes(json.dumps(infoString).encode('UTF-8'))
     uList = [('archive/' + OPERATION_DATE + '/' + 'infoString.json'), 'infoString.json']
     for key in uList:
