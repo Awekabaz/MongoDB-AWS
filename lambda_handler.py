@@ -78,6 +78,13 @@ def lambda_handler(event, context):
                 
     infoString = 'd1: {}; d2: {}; d3: {}; d4: {};'.format(df1.shape,df2.shape,df3.shape,df4.shape)
     uploadByteStreams = bytes(json.dumps(infoString).encode('UTF-8'))
+    uList = [('archive/' + OPERATION_DATE + '/' + 'infoString.json'), 'infoString.json']
+    for key in uList:
+        s3.put_object(
+                    Bucket = bucketName, 
+                    Key = key, 
+                    Body = uploadByteStreams
+                    )
     return{
         'Status': 200,
         'Uploaded': 'SUCCESS',
