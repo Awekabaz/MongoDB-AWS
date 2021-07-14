@@ -7,11 +7,11 @@ def formatNumberHelper(number) -> int:
         return total
 
 def formatDateHelper(string) -> str:
-    if string != 'nan' and string != 'NaT' and string != 'None' and '-' not in string:
-        ts = float(string) / 1000.0
-        return datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-
     if string != 'nan' and string != 'NaT' and string != 'None':
+        if '-' not in string: # UNIX format
+            ts = float(string) / 1000.0
+            return datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+            
         return datetime.strptime(string.split('.')[0], '%Y-%m-%d %H:%M:%S')
-
-    return 'NaT'
+    
+    return ' '
