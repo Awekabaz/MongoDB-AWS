@@ -56,11 +56,11 @@ def lambda_handler(event, context):
 
     # Export the dataframes as .CSV, iterate over the dictionary
     # toCSV dictionary structure: list of [0] file name; [1] dataframe object
-    toCSV = {'d1':['dataframe1.csv', df1], 'd2': ['dataframe2.csv', df2], 'd3':['dataframe3.csv', df3], 'd4':['dataframe4.csv', df4]}
-    for structure in toCSV.values():
-            fileNameCSV = structure[0]
+    toCSV = {'users':df_users, 'registers': df_registers, 'checkins': df_checkins, 'courses': df_courses, 'events': df_events}
+    for structure in toCSV:
+            fileNameCSV = structure + '.csv'
             csv_buffer = StringIO()
-            structure[1].to_csv(csv_buffer)
+            toCSV[structure].to_csv(csv_buffer, index = False)
             
             # Upload the main files
             s3.put_object(
