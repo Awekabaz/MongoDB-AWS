@@ -6,7 +6,7 @@ import pymongo
 import os
 import utils.attributes
 import formatColumns
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 def lambda_handler(event, context):
@@ -28,43 +28,36 @@ def lambda_handler(event, context):
         'Uploaded': 'FAIL',
         'Collections uploaded': 'None'
         }
-    
+
+    # Getting the collections and converting to pandas dataframe for further processing
+    df1 = pd.DataFrame(list(DataBase.collection1.find()))
+    df2 = pd.DataFrame(list(DataBase.collection2.find()))
+    df3 = pd.DataFrame(list(DataBase.collection3.find()))
+    df4 = pd.DataFrame(list(DataBase.collection4.find()))
+
     myDatetime = datetime.now() + timedelta(hours=8)
     year = str(myDatetime.year)
     month = myDatetime.strftime("%B")
     OPERATION_DATE = myDatetime.strftime("%d-%m-%Y %H:%M:%S")
-    
-    # Getting the collections and converting to pandas dataframe for further processing
-    df_registers = pd.DataFrame(list(DataBase.registers.find()))
-    df_users = pd.DataFrame(list(DataBase.users.find()))
-    df_checkins = pd.DataFrame(list(DataBase.rankingcheckins.find()))
-    df_courses = pd.DataFrame(list(DataBase.courses.find()))
-    df_events = pd.DataFrame(list(DataBase.events.find()))
-
-    
-
 
     # Selecting the needed attributes and dropping other
-    df_users = df_users[utils.attributes.toExport['users']]
-    df_registers = df_registers[utils.attributes.toExport['registers']]
-    df_checkins = df_checkins[utils.attributes.toExport['checkins']]
-    df_courses = df_courses[utils.attributes.toExport['courses']]
-    df_events = df_events[utils.attributes.toExport['events']]
+    df1 = df1[utils.attributes.toExport['df1']]
+    df2 = df2[utils.attributes.toExport['df2']]
+    df3 = df3[utils.attributes.toExport['df3']]
+    df4 = df4[utils.attributes.toExport['df4']]
 
     # Formatting datetime columns: some has UNIX format some GMT
-    formatColumns.formatDate(df_users)
-    formatColumns.formatDate(df_registers)
-    formatColumns.formatDate(df_courses)
-    formatColumns.formatDate(df_checkins)
-    formatColumns.formatDate(df_events)
+    formatColumns.formatDate(df1)
+    formatColumns.formatDate(df2)
+    formatColumns.formatDate(df3)
+    formatColumns.formatDate(df4)
 
     # Format number columns
-    formatColumns.formatNumber(df_users)
+    formatColumns.formatNumber(df1)
 
     # Export the dataframes as .CSV, iterate over the dictionary
     # toCSV dictionary structure: list of [0] file name; [1] dataframe object
-    toCSV = {'users':df_users, 'registers': df_registers, 'checkins': df_checkins, 'courses': df_courses, 'events': df_events}
-
+    toCSV = {'d1':df1, 'd2': df2, 'd3': df3, 'd4': df4}
     for structure in toCSV:
             fileNameCSV = structure + '.csv'
             csv_buffer = StringIO()
@@ -84,7 +77,7 @@ def lambda_handler(event, context):
                 Body = csv_buffer.getvalue()
                 )  
                 
-    infoString = 'DATE: {}; users: {}; registers: {}; checkins: {}; courses: {}; events: {};'.format(OPERATION_DATE,df_users.shape,df_registers.shape,df_checkins.shape,df_courses.shape, df_events.shape)
+    infoString = 'DATE: {}; d1: {}; d2: {}; d3: {}; d4: {};'.format(OPERATION_DATE, df1.shape,df2.shape,df3.shape,df4.shape)
     uploadByteStreams = bytes(json.dumps(infoString).encode('UTF-8'))
     uList = [('archive/' + year + '/' + month + '/' + OPERATION_DATE + '/' + 'infoString.json'), 'infoString.json']
     for key in uList:
