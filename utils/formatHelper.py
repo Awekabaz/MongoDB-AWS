@@ -1,12 +1,12 @@
 from datetime import *
 
-def formatNumberHelper(number) -> int:
+def formatNumberHelper(number: str) -> int:
     if number != 'nan':
         total = ''
         [total := total + x for x in number.split(' ')]
         return total
 
-def formatDateHelper(string) -> str:
+def formatDateHelper(string: str) -> str:
     if string != 'nan' and string != 'NaT' and string != 'None':
         if '-' not in string: # UNIX format
             ts = float(string) / 1000.0

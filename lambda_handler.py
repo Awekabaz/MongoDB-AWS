@@ -35,6 +35,7 @@ def lambda_handler(event, context):
     df3 = pd.DataFrame(list(DataBase.collection3.find()))
     df4 = pd.DataFrame(list(DataBase.collection4.find()))
 
+    # Get the operation date and time for further archiving
     myDatetime = datetime.now() + timedelta(hours=8)
     year = str(myDatetime.year)
     month = myDatetime.strftime("%B")
