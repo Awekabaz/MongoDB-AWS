@@ -36,7 +36,7 @@ def lambda_handler(event, context):
     df4 = pd.DataFrame(list(DataBase.collection4.find()))
 
     # Get the operation date and time for further archiving
-    myDatetime = datetime.now() + timedelta(hours=8)
+    myDatetime = datetime.now() + datetime.timedelta(hours=8)
     year = str(myDatetime.year)
     month = myDatetime.strftime("%B")
     OPERATION_DATE = myDatetime.strftime("%d-%m-%Y %H:%M:%S")
@@ -77,7 +77,8 @@ def lambda_handler(event, context):
                 Key = 'archive/' + year + '/' + month + '/' + OPERATION_DATE + '/' + fileNameCSV, 
                 Body = csv_buffer.getvalue()
                 )  
-                
+
+    # Create, upload and archive a JSON file with info about the operation finished      
     infoString = 'DATE: {}; d1: {}; d2: {}; d3: {}; d4: {};'.format(OPERATION_DATE, df1.shape,df2.shape,df3.shape,df4.shape)
     uploadByteStreams = bytes(json.dumps(infoString).encode('UTF-8'))
     uList = [('archive/' + year + '/' + month + '/' + OPERATION_DATE + '/' + 'infoString.json'), 'infoString.json']
