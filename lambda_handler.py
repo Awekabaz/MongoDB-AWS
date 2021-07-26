@@ -47,6 +47,10 @@ def lambda_handler(event, context):
     df3 = df3[utils.attributes.toExport['df3']]
     df4 = df4[utils.attributes.toExport['df4']]
 
+    toCSV = {'d1':df1, 'd2': df2, 'd3': df3, 'd4': df4}
+    for df in toCSV.values():
+        formatColumns.formatDate(df)
+    
     # Formatting datetime columns: some has UNIX format some GMT
     formatColumns.formatDate(df1)
     formatColumns.formatDate(df2)
@@ -58,7 +62,6 @@ def lambda_handler(event, context):
 
     # Export the dataframes as .CSV, iterate over the dictionary
     # toCSV dictionary structure: list of [0] file name; [1] dataframe object
-    toCSV = {'d1':df1, 'd2': df2, 'd3': df3, 'd4': df4}
     for structure in toCSV:
             fileNameCSV = structure + '.csv'
             csv_buffer = StringIO()
