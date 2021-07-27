@@ -6,7 +6,7 @@ import os
 import utils.attributes
 import formatColumns
 from datetime import datetime
-from myContextManager import myConnectionManager
+from myManagementHelper import myConnectionManager
 
 def lambda_handler(event, context):
     
