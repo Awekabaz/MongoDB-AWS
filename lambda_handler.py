@@ -2,38 +2,26 @@ import json
 import pandas as pd
 import boto3
 from io import StringIO
-import pymongo
 import os
 import utils.attributes
 import formatColumns
 from datetime import datetime
-
+from myContextManager import myConnectionManager
 
 def lambda_handler(event, context):
     
     # Getting environment variables and initializing the clients
     dbURL = os.environ['SECURITY_STRING']
     bucketName = os.environ['BUCKET_NAME']
-    client = pymongo.MongoClient(dbURL, serverSelectionTimeoutMS=20000)
     s3 = boto3.client('s3')
-    DataBase = client.get_database()
 
-    # Checking the connection
-    try:
-        print(client.server_info())
-    except Exception:
-        print("Unable to connect to the server.")
-        return{
-        'Status': 667,
-        'Uploaded': 'FAIL',
-        'Collections uploaded': 'None'
-        }
-
-    # Getting the collections and converting to pandas dataframe for further processing
-    df1 = pd.DataFrame(list(DataBase.collection1.find()))
-    df2 = pd.DataFrame(list(DataBase.collection2.find()))
-    df3 = pd.DataFrame(list(DataBase.collection3.find()))
-    df4 = pd.DataFrame(list(DataBase.collection4.find()))
+    with myConnectionManager(dbURL) as mongo:
+        DataBase = mongo.connection.get_database()
+        # Getting the collections and converting to pandas dataframe for further processing
+        df1 = pd.DataFrame(list(DataBase.collection1.find()))
+        df2 = pd.DataFrame(list(DataBase.collection2.find()))
+        df3 = pd.DataFrame(list(DataBase.collection3.find()))
+        df4 = pd.DataFrame(list(DataBase.collection4.find()))
 
     # Get the operation date and time for further archiving
     myDatetime = datetime.now() + datetime.timedelta(hours=8)
