@@ -3,9 +3,11 @@ import pandas as pd
 import boto3
 from io import StringIO
 import os
+from datetime import datetime
+
+# my modules
 import utils.attributes
 import formatColumns
-from datetime import datetime
 from myManagementHelper import myConnectionManager
 
 def lambda_handler(event, context):
