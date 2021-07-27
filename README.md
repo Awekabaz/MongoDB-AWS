@@ -10,6 +10,8 @@ Data transfer from MongoDB to AWS S3 bucket for further data visualization in AW
 
 - The database and handler are connected via peering connection (voiding connection via global network).
 
+- Context Manager in **`myContextManager.py`** `myConnectionManager` class was implemented. It is simple database connection management system, helpful in managing connections to the database.
+
 - In **`utils.attributes.py`** lists with needed columns are stored; **`utils.formatHelper.py`** contains functions needed to format the datetime columns as some of them has UNIX or GMT formats; **`formatColumns.py`** is module used to run helpers and format columns.
 
 - The lambda helper overwrites the existing files and also creates the archive, and saves the extracted data.
